@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Contributor
+from .models import CustomUser
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
@@ -23,9 +23,5 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
 
-class ContributorAdmin(admin.ModelAdmin):
-    model = Contributor
-    list_display = ('user', 'project','role')
 
-admin.site.register(Contributor, ContributorAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)

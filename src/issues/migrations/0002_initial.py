@@ -11,24 +11,19 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('projects', '0001_initial'),
-        ('users', '0001_initial'),
+        ('issues', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='users',
-            field=models.ManyToManyField(related_name='users', through='projects.Contributor', to=settings.AUTH_USER_MODEL),
+            model_name='issue',
+            name='author',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name='contributor',
+            model_name='issue',
             name='project',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='projects.project'),
-        ),
-        migrations.AddField(
-            model_name='contributor',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
     ]

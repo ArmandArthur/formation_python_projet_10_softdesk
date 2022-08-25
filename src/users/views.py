@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
+from rest_framework import status, serializers
+from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import RegisterSerializer, LoginSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib import auth
 import jwt
 from django.conf import settings
+
 
 class RegisterView(GenericAPIView):
     serializer_class = RegisterSerializer
@@ -22,20 +25,36 @@ class LoginView(GenericAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request):
-        data = request.data
-        email = data.get('email', '')
-        password = data.get('password', '')
-        user = auth.authenticate(email=email, password=password)
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data # Fetch the data form serializer
 
-        if user:
-            auth_token = jwt.encode(
-                {'email': user.email}, settings.JWT_SECRET_KEY, algorithm="HS256")
+        user = auth.authenticate(email=data['email'], password=data['password']) # check for email and password
 
-            serializer = RegisterSerializer(user)
+        # Generate Token
+        refresh = RefreshToken.for_user(user)
 
-            data = {'user': serializer.data, 'token': auth_token}
+        return Response(
+            {
+                'access': str(refresh.access_token),
+                'refresh': str(refresh)
+            }, status=status.HTTP_200_OK
+        )
+        # data = request.data
+        # email = data.get('email', '')
+        # password = data.get('password', '')
+        # user = auth.authenticate(email=email, password=password)
 
-            return Response(data, status=status.HTTP_200_OK)
+        # if user:
+        #     auth_token = jwt.encode(
+        #         {'email': user.email}, settings.JWT_SECRET_KEY, algorithm="HS256")
 
-            # SEND RES
-        return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        #     # sinon erreur
+        #     serializer = LoginSerializer(user)
+
+        #     data = {'user': serializer.data, 'token': auth_token}
+
+        #     return Response(data, status=status.HTTP_200_OK)
+
+        #     # SEND RES
+        # return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
