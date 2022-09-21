@@ -1,28 +1,21 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import Issue
-from projects.models import Project
-from users.models import CustomUser
+from .permissions import IssuePermission
 from .serializers import IssueSerializer
 from rest_framework import status
 from rest_framework.response import Response
 
 
 class IssueViewSet(viewsets.ModelViewSet):
+
     serializer_class = IssueSerializer
     http_method_names = ['get', 'post','put','delete']
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IssuePermission)
 
     def get_queryset(self):
         return Issue.objects.all()
     
-    # def list(self, request, *args, **kwargs):
-    #     user_id = request.data['user_id']
-    #     # used related_name "users"
-    #     projects = Project.objects.filter(users=user_id)
-    #     serializer = ProjectSerializer(projects, many=True)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-
     def create(self, request, *args, **kwargs):
         _mutable = request.data._mutable
         request.data._mutable = True
