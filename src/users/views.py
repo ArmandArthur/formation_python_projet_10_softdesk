@@ -1,8 +1,8 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, LoginSerializer
 from rest_framework.response import Response
+from .serializers import RegisterSerializer, LoginSerializer
 from django.contrib import auth
 
 
@@ -26,14 +26,12 @@ class LoginView(GenericAPIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        user = auth.authenticate(email=data['email'], password=data['password'])
+        user = auth.authenticate(email=data["email"], password=data["password"])
 
         # Generate Token
         refresh = RefreshToken.for_user(user)
 
         return Response(
-            {
-                'access': str(refresh.access_token),
-                'refresh': str(refresh)
-            }, status=status.HTTP_200_OK
+            {"access": str(refresh.access_token), "refresh": str(refresh)},
+            status=status.HTTP_200_OK,
         )

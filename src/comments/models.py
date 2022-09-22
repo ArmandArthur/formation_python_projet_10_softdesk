@@ -16,4 +16,4 @@ class Comment(models.Model):
         return self.description_comment
 
     class Meta:
-        db_table = 'comments'
+        db_table = "comments"

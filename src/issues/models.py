@@ -21,4 +21,4 @@ class Issue(models.Model):
         return self.title_issue
 
     class Meta:
-        db_table = 'issues'
+        db_table = "issues"
