@@ -142,3 +142,4 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=15),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=15),
 }
+LOGIN_REDIRECT_URL = '/api/token'
