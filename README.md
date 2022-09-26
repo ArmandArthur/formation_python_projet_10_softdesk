@@ -43,7 +43,7 @@ Les requêtes requièrent un token.
 
 # Aller sur l'applicaton:
 
-`http://127.0.0.1:8000/api`<br />
+`http://127.0.0.1:8000/api-auth/login/`<br />
 
 
 
