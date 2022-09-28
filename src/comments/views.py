@@ -8,6 +8,9 @@ from rest_framework.response import Response
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    '''
+        Comment API
+    '''
     serializer_class = CommentSerializer
     http_method_names = ["get", "post", "put", "delete"]
     permission_classes = (IsAuthenticated, CommentPermission)
@@ -16,6 +19,10 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Comment.objects.all()
 
     def create(self, request, *args, **kwargs):
+        '''
+            Comment create
+            @Return Response about comment created
+        '''
         _mutable = request.data._mutable
         request.data._mutable = True
         request.data["issue"] = kwargs["issues_pk"]
@@ -30,6 +37,10 @@ class CommentViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
+        '''
+            Comment update
+            @Return Response about comment updated
+        '''
         commment_instance = Comment.objects.filter(id=kwargs["pk"]).first()
         serializer = CommentSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -40,16 +51,27 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Response(serializer_data, status=status.HTTP_201_CREATED)
 
     def list(self, request, *args, **kwargs):
+        '''
+            List comment by Issue
+            @Return Response list comments
+        '''
         issue_id = kwargs["issues_pk"]
         comments = Comment.objects.filter(issue_id=issue_id)
         serializer = CommentSerializer(comments, many=True)
         return Response({"issues": serializer.data}, status=status.HTTP_200_OK)
 
     def get(self, request, *args, **kwargs):
+        '''
+            Get One comment
+            @Return Response comment
+        '''
         comment_id = kwargs["pk"]
         comment = Comment.objects.filter(id=comment_id)
         serializer = CommentSerializer(comment)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
+        '''
+            Destroy comment
+        '''
         return super(CommentViewSet, self).destroy(request, args, **kwargs)

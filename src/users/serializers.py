@@ -11,12 +11,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ["id", "email", "password"]
 
     def validate(self, attrs):
+        '''
+            Verify if user exists else call parent
+        '''
         email = attrs.get("email", "")
         if CustomUser.objects.filter(email=email).exists():
             raise serializers.ValidationError({"email": ("Email is already in use")})
         return super().validate(attrs)
 
     def create(self, validated_data):
+        '''
+            Create user from CustomUser Manager
+        '''
         return CustomUser.objects.create_user(**validated_data)
 
 

@@ -7,9 +7,16 @@ from django.contrib import auth
 
 
 class RegisterView(GenericAPIView):
+    '''
+        Register View API
+    '''
     serializer_class = RegisterSerializer
 
     def post(self, request):
+        '''
+            The name about method is post
+            @Return Reponse with data user
+        '''
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -19,10 +26,16 @@ class RegisterView(GenericAPIView):
 
 
 class LoginView(GenericAPIView):
-
+    '''
+        Login View API
+    '''
     serializer_class = LoginSerializer
 
     def post(self, request):
+        '''
+            The name about method is post
+            @Return Response with token
+        '''
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data

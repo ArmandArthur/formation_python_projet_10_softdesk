@@ -13,12 +13,18 @@ from rest_framework.response import Response
 
 
 class ProjectContributorViewSet(viewsets.ModelViewSet):
-
+    '''
+        Contributor API Class
+    '''
     serializer_class = ProjectContributorCrudSerializer
     http_method_names = ["get", "post", "put", "delete"]
     permission_classes = (IsAuthenticated, ProjectContributorPermission)
 
     def create(self, request, *args, **kwargs):
+        '''
+            Project API create
+            @Return Response with contributor data
+        '''
         data_contrib = {}
         data_contrib["project_id"] = kwargs["projects_pk"]
         data_contrib["user_id"] = request.data["user_id"]
@@ -37,12 +43,20 @@ class ProjectContributorViewSet(viewsets.ModelViewSet):
         pass
 
     def destroy(self, request, *args, **kwargs):
+        '''
+            Contributor API delete
+            @Return Response empty
+        '''
         user_id = kwargs["pk"]
         contrib_del = Contributor.objects.filter(user=user_id, role="Contributor")
         contrib_del.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def list(self, request, *args, **kwargs):
+        '''
+            List Contributor by project
+            @Return Response List many
+        '''
         project_id = kwargs["projects_pk"]
         contributors = Contributor.objects.filter(project_id=project_id)
         serializer = ProjectContributorSerializer(contributors, many=True)
@@ -50,18 +64,30 @@ class ProjectContributorViewSet(viewsets.ModelViewSet):
 
 
 class ProjectViewSet(viewsets.ModelViewSet, ProjectPermission):
+    '''
+        Project API Class
+    '''
     serializer_class = ProjectSerializer
     http_method_names = ["get", "post", "put", "delete"]
     permission_classes = [ProjectPermission]
 
     def get_user(self, user_id):
+        '''
+            Return user instance from id
+        '''
         user = CustomUser.objects.filter(id=user_id).values("id", "email").first()
         return user
 
     def get_queryset(self):
+        '''
+            Initial rights
+        '''
         return Project.objects.all()
 
     def list(self, request, *args, **kwargs):
+        '''
+            List about projects by user
+        '''
         user_id = request.data["user_id"]
         # used related_name "users"
         projects = Project.objects.filter(users=user_id)
@@ -69,6 +95,9 @@ class ProjectViewSet(viewsets.ModelViewSet, ProjectPermission):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def create(self, request, *args, **kwargs):
+        '''
+            Create project and Author in contributor table
+        '''
         serializer = ProjectSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -89,9 +118,15 @@ class ProjectViewSet(viewsets.ModelViewSet, ProjectPermission):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
+        '''
+            Update project
+        '''
         return super(ProjectViewSet, self).update(request, args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
+        '''
+            Delete project and all contributors
+        '''
         project = self.get_object()
         project_id = project.id
         contrib_join = Contributor.objects.filter(project=project_id)

@@ -5,6 +5,9 @@ from .models import Project, Contributor
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    '''
+        Serializer project
+    '''
     title_project = serializers.CharField(max_length=128, min_length=8)
     description_project = serializers.CharField(max_length=128, min_length=8)
     type_project = serializers.CharField(max_length=128, min_length=4)
@@ -19,6 +22,9 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    '''
+        Serializer Custom User 
+    '''
     id = serializers.IntegerField()
     email = serializers.CharField()
 
@@ -28,6 +34,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class ProjectContributorSerializer(serializers.ModelSerializer):
+    '''
+        Serializer Contributor with data user 
+    '''
     project_id = serializers.IntegerField()
     user_full = serializers.SerializerMethodField()
 
@@ -44,6 +53,9 @@ class ProjectContributorSerializer(serializers.ModelSerializer):
 
 
 class ProjectContributorCrudSerializer(serializers.ModelSerializer):
+    '''
+        Serializer Contributor Normal 
+    '''
     user_id = serializers.IntegerField()
     project_id = serializers.IntegerField()
 

@@ -4,6 +4,9 @@ from projects.models import Contributor
 
 
 class CommentPermission(BasePermission):
+    '''
+        Permissions comment
+    '''
     def has_permission(self, request, view):
         is_author = False
         if "pk" in view.kwargs:

@@ -3,6 +3,9 @@ from projects.models import Contributor
 
 
 class ProjectPermission(BasePermission):
+    '''
+        Permissions Project 
+    '''
     def has_permission(self, request, view):
         is_contributor = False
 
@@ -23,6 +26,9 @@ class ProjectPermission(BasePermission):
 
 
 class ProjectContributorPermission(BasePermission):
+    '''
+        Permissions Project Contributor
+    '''
     def has_permission(self, request, view):
         is_contributor = False
         if "projects_pk" in view.kwargs:
